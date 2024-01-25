@@ -1,11 +1,48 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <h1>Home Component Works! <span class="material-icons">thumb_up</span></h1>
-    </div>
-  </div>
+<!--
+  home.component.html
+  Danielle Taplin
+  1/20/2024
+  html for home page of nodebucket
+-->
+<div class="container-fluid pt-2 bg-ravenclaw3 text-black">
 
-  <a routerLink="/security">Test Security Module</a>
+  <h1 class="text-center text-black">Welcome to Nodebucket</h1>
+
+  <div class="row mt-5">
+
+    <!--About Us section-->
+    <div class="col-sm-4 text-center">
+      <figure>
+        <a routerLink="/about">
+          <img class="img-fluid" src="../../assets/about-us.jpg" width="50%" alt="image of a book with lights in it leading to About Us page">
+        </a>
+        <h1>About Us</h1>
+        <p>Click here to learn some amazing facts about Nodebucket.</p>
+      </figure>
+    </div>
+
+<!--Tasks section-->
+<div class="col-sm-4 text-center">
+  <figure>
+    <a routerLink="/task-management/my-tasks">
+      <img class="img-fluid" src="../../assets/todo.jpg" width="50%" alt="Image of to do list leading to Tasks page, may cause Sign In">
+    </a>
+    <h1>Tasks</h1>
+    <p>Manage all of your tasks in one place using Nodebucket.</p>
+  </figure>
 </div>
 
+    <!--Contact Us section-->
+    <div class="col-sm-4 text-center">
+      <figure>
+        <a routerLink="/contact">
+          <img class="img-fluid" src="../../assets/contact-us.jpg" width="50%" alt="image showing the word contact leading to Contact Us page">
+        </a>
+        <h1>Contact Us</h1>
+        <p>Questions? Reach out to us!</p>
+      </figure>
+    </div>
 
+  </div>
+
+</div>

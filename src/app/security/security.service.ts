@@ -1,5 +1,5 @@
 /**
- * Title: employees.js
+ * Title: security.service.ts
  * Author: Danielle Taplin
  * Date: 1/17/24
  * code provided by Krasso
@@ -14,7 +14,7 @@ export class SecurityService {
 
   constructor(private http: HttpClient) { }
 
-    findEmployeeById(empId: number) {
-      return this.http.get('/api/employees/' + empId); //returns the employee object matching the empId
+  findEmployeeById(empId: number) {
+    return this.http.get('/api/employees/' + empId);
   }
 }

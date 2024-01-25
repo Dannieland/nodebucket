@@ -1,0 +1,39 @@
+/**
+ * Title: nav.component.css
+ * Author: Danielle Taplin
+ * Date: 1/20/2024
+ */
+li {
+  margin: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+.font-yellow {
+  color: #946b2d;
+}
+
+.bg-ravenclaw {
+  background-color: #223164;
+}
+
+.bg-ravenclaw2 {
+  background-color: #5d5d5d;
+}
+
+.bg-ravenclaw3 {
+  background-color: #5d5d5d;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+cursor: pointer;
+background-color: #223164 !important;
+color: #946b2d;
+}
+
+.sign-out-right {
+  text-align: right;
+}

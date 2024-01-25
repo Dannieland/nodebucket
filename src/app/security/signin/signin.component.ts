@@ -15,6 +15,7 @@ export interface SessionUser {
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
+
 export class SigninComponent {
   errorMessage: string;
   sessionUser: SessionUser;
@@ -31,21 +32,45 @@ export class SigninComponent {
     private securityService: SecurityService,
     private fb: FormBuilder
   ) {
-    this.sessionUser = {} as SessionUser; //initialize the sessionUser object
-    this.errorMessage = ''; // initialize the errorMessage
+    this.sessionUser = {} as SessionUser;
+    this.errorMessage = '';
   }
 
   signin() {
-    this.isLoading = true; // set isLoading to true
+    this.isLoading = true;
     console.log("signinForm", this.signinForm.value);
-    const empId = this.signinForm.controls['empId'].value; //get the empId from the signinForm
+    const empId = this.signinForm.controls['empId'].value;
 
     if (!empId || isNaN(parseInt(empId, 10))) {
-      this.errorMessage = 'The employee ID is invalid. Please enter a number.'; //set the errorMessage
-      this.isLoading = false; // set isLoading to false
+      this.errorMessage = 'The employee ID is invalid. Please enter a number.';
+      this.isLoading = false;
       return;
     }
+
+    this.securityService.findEmployeeById(empId).subscribe({
+      next: (employee: any) => {
+        console.log('employee', employee);
+
+        this.sessionUser = employee;
+        this.cookieService.set('session_user', empId, 1);
+        this.cookieService.set('session_name', `${employee.firstName} ${employee.lastName}`, 1);
+
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+
+        this.isLoading = false;
+
+        this.router.navigate([returnUrl]);
+      },
+      error: (err) => {
+        this.isLoading = false;
+
+        if (err.error.message) {
+          this.errorMessage = err.error.message;
+          return;
+        }
+
+        this.errorMessage = err.message;
+      }
+    });
   }
-
-
 }
