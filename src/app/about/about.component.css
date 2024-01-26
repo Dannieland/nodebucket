@@ -1,0 +1,27 @@
+/*
+about.component.css
+Danielle Taplin
+1/25/24
+*/
+h1 {
+	margin-left: 20px;
+	font-family: 'Montserrat';
+	text-shadow: 1px 8px 8px rgba(6, 5, 1, 0.6);
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+p {
+	font-family: 'Montserrat', sans-serif;
+	line-height: 40px;
+	text-align: justify;
+	color: #faf2e4;
+	font-size: 25px;
+    text-align: center;
+	
+}
+.about {
+	width: 95%;
+	margin: 10px auto;
+	background-color: #223164;
+}

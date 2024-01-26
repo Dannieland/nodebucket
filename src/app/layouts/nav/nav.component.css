@@ -26,6 +26,7 @@ li {
 
 .dropdown-item {
   cursor: pointer;
+  color: #946b2d;
 }
 
 .dropdown-item:hover {

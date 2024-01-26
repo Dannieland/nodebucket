@@ -1,3 +1,9 @@
+/*
+tasks.component.ts
+Danielle Taplin
+1/25/24
+*/
+
 import { Component } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { TaskService } from '../shared/task.service';
@@ -10,7 +16,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-
 export class TasksComponent {
   employee: Employee;
   empId: number;
@@ -20,7 +25,7 @@ export class TasksComponent {
   successMessage: string;
 
   newTaskForm: FormGroup = this.fb.group({
-    text:[null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(50)])]
+    text: [null, Validators.compose ([ Validators.required, Validators.minLength(3), Validators.maxLength(50)])]
   });
 
   constructor(private cookieService: CookieService, private taskService: TaskService, private fb: FormBuilder) {
@@ -28,58 +33,66 @@ export class TasksComponent {
     this.todo = [];
     this.done = [];
     this.errorMessage = '';
-    this.successMessage = ''; 
+    this.successMessage = '';
 
     this.empId = parseInt(this.cookieService.get('session_user'), 10);
 
     this.taskService.getTasks(this.empId).subscribe({
       next: (res: any) => {
-        console.log('Employee', res);
+        console.log('Employee: ', res);
         this.employee = res;
       },
       error: (err) => {
-        console.error('error', err);
+        console.error('error: ', err);
         this.errorMessage = err.message;
-        this.hideAlert(); //Hide Alert after 5 seconds
+        this.hideAlert();
       },
       complete: () => {
-        this.employee.todo ? this.todo = this.employee.todo : this.todo = [];
-        this.employee.done ? this.todo = this.employee.done : this.done = [];
+        if (this.employee.todo) {
+          this.todo = this.employee.todo;
+        } else {
+          this.todo = [];
+        }
+        if (this.employee.done) {
+          this.done = this.employee.done;
+        } else {
+          this.done = [];
+        }
 
-        console.log('todo', this.todo);
-        console.log('done', this.done);
       }
-    })
+   });
   }
+
   addTask() {
-    const text = this.newTaskForm.controls['text'].value;
+    const text = this.newTaskForm.controls['text']?.value;
 
     this.taskService.addTask(this.empId, text).subscribe({
       next: (task: any) => {
-        console.log('Task added with id', task.id);
+        console.log('Task added: ', task);
+        this.successMessage = 'Task added successfully';
         const newTask = {
-          _id: task.id,
+          _id: task._id,
           text: text
         }
 
-        this.todo.push(newTask); //Add task to todo list
-        this.newTaskForm.reset(); //Reset form
+        this.todo.push(newTask);
+        this.newTaskForm.reset();
 
-        this.successMessage = 'Task added successfully';
+        this.hideAlert();
 
-        this.hideAlert(); //Hide alert after 5 seconds
       },
       error: (err) => {
-        console.log('error', err);
-        this.errorMessage = err.message;
-        this.hideAlert(); //Hide alert after 5 seconds
+        console.log('Error: ', err);
+        this.errorMessage = 'Unable to add task';
+        this.hideAlert();
       }
-    });
+  });
   }
+
   hideAlert() {
     setTimeout(() => {
       this.errorMessage = '';
-      this.successMessage= '';
-    }, 5000)
+      this.successMessage = '';
+    }, 5000);
   }
 }

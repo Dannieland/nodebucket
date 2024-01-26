@@ -1,0 +1,37 @@
+/*
+contact.component.css
+Danielle Taplin
+1/25/24
+*/
+h1 {
+	margin-left: 20px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+	font-family: 'Montserrat', sans-serif;
+	text-align: center;
+	text-shadow: 1px 8px 8px rgba(6, 5, 1, 0.6);
+}
+
+p {
+	font-family: "Montserrat", sans-serif;
+	line-height: 50px;
+	text-align: center;
+	color: #966b2d;
+	font-size: 25px;
+	margin-top: 0px;
+	text-shadow: 1px 8px 8px rgba(6, 5, 1, 0.6);
+}
+
+i {
+	color: black;
+	font-size: 50px;
+	text-shadow: 1px 8px 14px rgba(255, 255, 255, 0.6);
+}
+
+.contact {
+	width: 30%;
+	margin: 10px auto;
+	background-color: #223164;
+	text-align: center;
+	text-shadow: 3px 8px 8px rgba(6, 5, 1, 0.6);
+}
