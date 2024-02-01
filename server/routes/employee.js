@@ -21,6 +21,49 @@ const { ObjectId } = require('mongodb');
 
 const ajv = new Ajv();
 
+//ajv schema validation
+//defined task schema with valid properties
+const taskSchema = {
+  type: 'object',
+  properties: {
+    text: { type: 'string'}
+  },
+  required: ['text'],
+  additionalProperties: false
+}
+//task for schema validation
+
+const tasksSchema = {
+  type: 'object',
+  required: ['todo', 'done'],
+  additionalProperties: false,
+  properties: {
+    todo: {
+      type: 'object',
+      items: {
+        properties: {
+          _id: { type: 'string' },
+          text: { type: 'string' },
+        },
+        done: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              _id: { type: 'string' },
+              text: { type: 'string' }
+            },
+            required: ['_id', 'text'],
+            additionalProperties: false
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
 /**
  * findEmployeeById
  * @swagger
@@ -191,14 +234,7 @@ router.get('/:empId/tasks', (req, res, next) => {
 
 //ajv schema validation
 //defined task schema with valid properties
-const taskSchema = {
-  type: 'object',
-  properties: {
-    text: { type: 'string'}
-  },
-  required: ['text'],
-  additionalProperties: false
-}
+
 
 //create task API
 router.post('/:empId/tasks', (req, res, next) => {
@@ -270,6 +306,109 @@ router.post('/:empId/tasks', (req, res, next) => {
     next(err);
   }
 })
+
+//update tasks API
+router.put('/:empId/tasks', (req, res, next) => {
+  try {
+    let { empId } = req.params;
+    empId = parseInt(empId, 10);
+    console.log('empId', empId);
+
+    //empId validation
+    if (isNaN(empId)) {
+      const err = new Error('input must be a number');
+      err.status = 400;
+      console.error('err', err);
+      next(err);
+      return;
+    }
+    const validator = ajv.compile(tasksSchema);
+    const isValid = validator(req.body); //validate the request body
+
+    //req.body validation
+    if (!isValid) {
+      const err = new Error('Bad Request');
+      err.status = 400;
+      err.errors = validator.errors;
+      console.error('err', err);
+      next(err);
+      return; //return to exit the function
+    }
+    mongo(async db => {
+      const employee = await db.collection('employees').findOne({empId});
+
+      //if the employee is not found
+      if(!employee) {
+        const err = new Error('Unable to find employee with empId ' + empId);
+        err.status = 404;
+        console.error('err', err);
+        next(err);
+        return;
+      }
+      const result = await db.collection('employees').updateOne(
+        { empId },
+        { $set: {todo: req.body.todo, done: req.body.done }}
+      )
+      //if the record was not updated return a 500 status code
+      if(!result.modifiedCount) {
+        const err = new Error('Unable to update tasks for empId ' + empId);
+        err.status = 500;
+        console.error('err', err);
+        next(err);
+        return;
+      }
+      res.status(204).send();
+    }, next);
+  } catch (err) {
+    console.error('err', err);
+    next(err);
+  }
+});
+
+//delete task
+router.delete('/:empId/tasks/:taskId', (req, res, next) => {
+  try {
+    let { empId, taskId } = req.params;
+    empId = parseInt(empId, 10);
+
+    //employeeId validation
+    if(isNaN(empId)) {
+      const err = new Error('input must be a number');
+      err.status = 400;
+      console.error('err', err);
+      next(err);
+      return;
+    }
+    mongo(async db => {
+      let employee = await db.collection('employees').findOne({ empId });
+
+      //if the employee is not found
+      if(!employee) {
+        const err = new Error('Unable to find employee with empId ' + empId);
+        err.status = 404;
+        console.error('err', err);
+        next(err);
+        return;
+      }
+
+      if (!employee.todo) employee.todo = []; //if the employee does not have a todo array create one
+      if (!employee.done) employee.done = []; //if the employee does not have a done array create one
+
+      const todo = employee.todo.filter(task => task._id.toString() !== taskId.toString()); // filter the todo array
+      const done = employee.done.filter(task => task._id.toString() !== taskId.toString()); // filter the done array
+
+      //update the employee record with the new todo and done arrays
+      const result = await db.collection('employees').updateOne(
+        { empId },
+        { $set: { todo: todo, done: done}}
+      )
+      res.status(204).send();
+    }, next);
+  } catch (err) {
+    console.error('err',err);
+    next(err);
+  }
+});
 
 //exports
 module.exports = router;

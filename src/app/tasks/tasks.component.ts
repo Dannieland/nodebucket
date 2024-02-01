@@ -37,7 +37,7 @@ export class TasksComponent {
 
     this.empId = parseInt(this.cookieService.get('session_user'), 10);
 
-    this.taskService.getTasks(this.empId).subscribe({
+    this.taskService.getTask(this.empId).subscribe({
       next: (res: any) => {
         console.log('Employee: ', res);
         this.employee = res;

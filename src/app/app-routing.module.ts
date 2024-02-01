@@ -13,6 +13,7 @@ import { TasksComponent } from './tasks/tasks.component';
 import { authGuard } from './shared/auth.guard';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 // routes array with a path, component, and title for each route in the application (e.g. home, about, contact, etc.)
 const routes: Routes = [
@@ -31,17 +32,22 @@ const routes: Routes = [
         title: 'Nodebucket: Home'
       },
       {
-        path: 'contact',
+        path: 'contact', //title for contact page
         component: ContactComponent,
         title: 'Nodebucket: Contact'
       },
       {
-        path: 'about',
+        path: 'not-found', //title for not found
+        component: NotFoundComponent,
+        title: 'Nodebucket: 404'
+      },
+      {
+        path: 'about', //title for about page
         component: AboutComponent,
         title: 'Nodebucket: About'
       },
       {
-        path: 'task-management',
+        path: 'task-management', //title for task page
         component: TasksComponent,
         canActivate: [authGuard]
       }
@@ -51,6 +57,10 @@ const routes: Routes = [
     // path for the security module (e.g. login, register, forgot password, etc.)
     path: 'security',
     loadChildren: () => import('./security/security.module').then(m => m.SecurityModule)
+  },
+  {
+    path: '**', //not-found redirection link
+    redirectTo: 'not-found'
   }
 ];
 

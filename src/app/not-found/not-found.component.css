@@ -1,0 +1,13 @@
+/*
+not-found.component.css
+Danielle Taplin
+1/31/24
+Basic styling for not found component
+*/
+div {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+h2 {
+   padding-bottom: 50px;
+}
