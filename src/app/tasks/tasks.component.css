@@ -1,0 +1,29 @@
+/*
+tasks.component.css
+Danielle Taplin
+2/1/24
+css for task page
+*/
+.task-container{
+    background-color: #223164;
+  }
+  
+  .add-btn{
+    background-color: #FFD740;
+  }
+  
+  .text{
+    color:#966b2d;
+  }
+  
+  h1{
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  .radius{
+    border-radius: 7px;
+  }
+  
+  .font{
+    font-family: "Montserrat", sans-serif;
+  }
