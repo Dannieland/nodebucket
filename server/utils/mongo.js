@@ -4,49 +4,47 @@
  * Date: 1/17/24
  */
 
-"use strict";
+"use strict"
 
-// require statements
-const { MongoClient } = require("mongodb");
+// Import Mongo
+const { MongoClient } = require('mongodb');
 const config = require('./config');
 
-//connecting string for MongoDB Atlas
+// Define connection string
 const MONGO_URL = config.dbUrl;
 
-const mongo = async(operations, next) => {
-  //catches potential error
-  try {
-    console.log("Connecting to MongoDB...");
+// Define mongo function
+const mongo = async (operations, next) => {
 
-    //connect to the MongoDB cluster
+  try {
+    console.log('Connecting to database...');
+
+    // Connect to database
     const client = await MongoClient.connect(MONGO_URL, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     });
 
-    //selects the database
+    // Define database
     const db = client.db(config.dbname);
-    console.log("Connected to db.");
+    console.log('Connected to database');
 
-    //execute the passed in operation
+    // Call operations
     await operations(db);
-    console.log("Operation was successful");
+    console.log('Operation was successful');
 
-    //close the connection
+    // Close connection
     client.close();
-    console.log('Closing connection to the MongoDB Atlas...')
+    console.log('Connection closed');
 
+    // Error handling for database connection
   } catch (err) {
-    //if error(s) caught throws error 500 status
-    const error = new Error("Error connecting to db ", err);
+    const error = new Error('Application Error', err);
     error.status = 500;
-
-    //log out the error
-    console.log("Error connecting to db: ", err);
-    next(error);
+    console.log("Error connecting to the database:", err);
   }
 };
-//exports
+
 module.exports = { mongo };
 
 
